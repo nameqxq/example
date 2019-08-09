@@ -1,0 +1,23 @@
+server:
+  port: 9999
+  tomcat:
+    uri-encoding: utf-8
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physicalStrategy: test.quxiqi.sharding.sphere.config.LaimiNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    jdbcUrl: jdbc:mysql://101.236.55.211:22351/test?useUnicode=true&characterEncoding=UTF-8
+    username: laimi_develop
+    password: TSzIFJHThBBqwwwM
+    maximum-pool-size: 50
+    minimum-idle: 3
+    connection-timeout: 30000
