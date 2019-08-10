@@ -25,6 +25,8 @@ spring:
     sharding:
       tables:
         example:
+          logicTable: example
+          actualDataNodes: ds.example_${0..1}
           tableStrategy:
             standard:
               shardingColumn: id
