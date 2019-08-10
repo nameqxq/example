@@ -27,11 +27,10 @@ spring:
         example:
           tableStrategy:
             standard:
-              shardingColumn: create_time
+              shardingColumn: id
               preciseAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
-              rangeAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
-            keyGenerator:
-              type: SNOWFLAKE
-              column: id
+          keyGenerator:
+            type: SNOWFLAKE
+            column: id
     props:
       sql.show: true
