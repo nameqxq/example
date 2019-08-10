@@ -14,7 +14,10 @@ public class ExampleTableStrategy implements PreciseShardingAlgorithm<Long> {
 
     @Override
     public String doSharding(Collection<String> collection, PreciseShardingValue<Long> preciseShardingValue) {
-        return preciseShardingValue.getLogicTableName() + "_" + preciseShardingValue.getValue()%2;
+        String physicalTableName = preciseShardingValue.getLogicTableName() + "_" + preciseShardingValue.getValue()%2;
+        // TableUtils.createIfNotExist(physicalTableName, preciseShardingValue.getLogicTableName());
+        return physicalTableName;
     }
+
 
 }
