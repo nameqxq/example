@@ -27,7 +27,7 @@ public class EmployeeTest {
     private ExampleRepository exampleRepository;
     @Test
     public void insert() {
-        List<Employee> inserts = buildNewEmployee(100);
+        List<Employee> inserts = buildNewEmployee(10);
         employeeRepository.save(inserts);
 
         List<Example> inserts2 = ExampleTest.buildNewExamples(10);

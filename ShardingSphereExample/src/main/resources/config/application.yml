@@ -55,5 +55,8 @@ spring:
             column: id
             props:
               logicTableName: employee
+      defaultKeyGenerator:
+        type: SNOWFLAKE
+        column: id
     props:
       sql.show: true
