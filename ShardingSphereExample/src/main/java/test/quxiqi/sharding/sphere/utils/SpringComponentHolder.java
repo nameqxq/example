@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.function.Consumer;
 
 /**
- * 常用spring组件持有者，工具类中的组件请务使用此类统一获取
+ * 常用spring组件持有者，工具类中的组件请使用此类统一获取
  * @author <a href="mailto:quxiqi@zskuaixiao.com"> quxiqi </a>
  * @version 1.0 2019 八月.2019/8/12
  */
