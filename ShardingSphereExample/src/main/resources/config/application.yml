@@ -4,6 +4,13 @@ server:
     uri-encoding: utf-8
 
 spring:
+  redis:
+    host: 101.236.43.161
+    port: 6379
+    password: u2CVLsHGYn4dVh6M4qTMr17iaQk
+    pool:
+      max-wait: 10000
+    database: 2
   jpa:
     hibernate:
       ddl-auto: none
@@ -13,11 +20,26 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
-  datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    jdbcUrl: jdbc:mysql://101.236.55.211:22351/test?useUnicode=true&characterEncoding=UTF-8
-    username: laimi_develop
-    password: TSzIFJHThBBqwwwM
-    maximum-pool-size: 50
-    minimum-idle: 3
-    connection-timeout: 30000
+  shardingsphere:
+    datasource:
+      name: ds
+      ds:
+        driverClassName: com.mysql.jdbc.Driver
+        jdbcUrl: jdbc:mysql://101.236.55.211:22351/test?useUnicode=true&characterEncoding=UTF-8
+        username: laimi_develop
+        type: com.zaxxer.hikari.HikariDataSource
+        password: TSzIFJHThBBqwwwM
+    sharding:
+      tables:
+        example:
+          logicTable: example
+          actualDataNodes: ds.example_${0..1}
+          tableStrategy:
+            standard:
+              shardingColumn: id
+              preciseAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
+          keyGenerator:
+            type: REDIS
+            column: id
+    props:
+      sql.show: true

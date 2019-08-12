@@ -18,7 +18,6 @@ import java.util.Random;
  * @author <a href="mailto:quxiqi@zskuaixiao.com"> quxiqi </a>
  * @version 1.0 2019 八月.2019/8/9
  */
-@ActiveProfiles("sharding-sphere")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Runner.class)
 public class ExampleTest {
