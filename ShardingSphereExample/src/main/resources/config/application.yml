@@ -41,5 +41,7 @@ spring:
           keyGenerator:
             type: REDIS
             column: id
+            props:
+              logicTableName: example
     props:
       sql.show: true

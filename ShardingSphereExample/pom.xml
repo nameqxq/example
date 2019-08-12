@@ -53,8 +53,7 @@
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-core</artifactId>
             <version>${sharding-jdbc.version}</version>
-        </dependency>
-        <!--            <exclusions>
+            <!--            <exclusions>
                 <exclusion>
                     <artifactId>sharding-core-parse-oracle</artifactId>
                     <groupId>org.apache.shardingsphere</groupId>
@@ -68,5 +67,7 @@
                     <groupId>org.apache.shardingsphere</groupId>
                 </exclusion>
             </exclusions>-->
+        </dependency>
+
     </dependencies>
 </project>

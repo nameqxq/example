@@ -18,17 +18,13 @@ public class RedisKeyGenerator implements ShardingKeyGenerator, ApplicationConte
     private static StringRedisTemplate redisTemplate;
     private Properties properties;
 
-
     @Override
     public Comparable<?> generateKey() {
-        /*
-         * i want to have TableRule in this method
-         * then i can do like this
-         * redisTemplate.opsForValue().increment("$logicTableName:key", 1);
-         * or other special rules
-         * now i must create a special XxxRedisKeyGenerator for every logicTable
-         */
-        return redisTemplate.opsForValue().increment("test:key", 1);
+        String logicTableName = properties.getProperty("logicTableName");
+        if(logicTableName == null || logicTableName.isEmpty()) {
+            throw new IllegalStateException("REDIS主键生成 - 没有配置逻辑表名！");
+        }
+        return redisTemplate.opsForValue().increment(logicTableName + ":key", 1);
     }
 
     @Override

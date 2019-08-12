@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import test.quxiqi.sharding.sphere.Runner;
 import test.quxiqi.sharding.sphere.entity.Example;
@@ -28,6 +27,9 @@ public class ExampleTest {
     public void insert() {
         List<Example> inserts = buildNewExamples(100);
         exampleRepository.save(inserts);
+        // i'm sure i only use mysql, when i exclusions other database pom dependencies and start project:
+
+
     }
 
     @Test
