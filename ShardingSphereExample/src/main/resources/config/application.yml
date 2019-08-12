@@ -43,5 +43,17 @@ spring:
             column: id
             props:
               logicTableName: example
+        employee:
+          logicTable: employee
+          actualDataNodes: ds.employee_${0..1}
+          tableStrategy:
+            inline:
+              shardingColumn: id
+              algorithmExpression: employee_${id % 2}
+          keyGenerator:
+            type: REDIS
+            column: id
+            props:
+              logicTableName: employee
     props:
       sql.show: true

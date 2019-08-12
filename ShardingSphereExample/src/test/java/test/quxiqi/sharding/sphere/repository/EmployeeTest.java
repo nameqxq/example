@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import test.quxiqi.sharding.sphere.Runner;
+import test.quxiqi.sharding.sphere.entity.Employee;
 import test.quxiqi.sharding.sphere.entity.Example;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -19,43 +20,41 @@ import java.util.Random;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Runner.class)
-public class ExampleTest {
+public class EmployeeTest {
+    @Autowired
+    private EmployeeRepository employeeRepository;
     @Autowired
     private ExampleRepository exampleRepository;
-
     @Test
     public void insert() {
-        List<Example> inserts = buildNewExamples(100);
-        exampleRepository.save(inserts);
-        // i'm sure i only use mysql, when i exclusions other database pom dependencies and start project:
+        List<Employee> inserts = buildNewEmployee(100);
+        employeeRepository.save(inserts);
 
-
+        List<Example> inserts2 = ExampleTest.buildNewExamples(10);
+        exampleRepository.save(inserts2);
     }
 
     @Test
     public void select() {
-        List<Example> all = exampleRepository.findAll();
+        List<Employee> all = employeeRepository.findAll();
         System.out.println(all);
-
-        List<Example> before = exampleRepository.findByCreateTimeBefore(new Date());
-        System.out.println(before);
     }
 
-    public static List<Example> buildNewExamples(int num) {
+    private List<Employee> buildNewEmployee(int num) {
         Random random = new Random();
         int batch = random.nextInt() % 100000;
-        List<Example> list = new ArrayList<>(num);
+        List<Employee> list = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
             list.add(buildNewExample(batch, i));
         }
         return list;
     }
 
-    private static Example buildNewExample(int batch, int index) {
-        Example example = new Example();
+    private Employee buildNewExample(int batch, int index) {
+        Employee employee = new Employee();
         String namePre = String.format("%07d", batch);
-        example.setName(namePre + "-" + index);
-        example.setCreateTime(new Date());
-        return example;
+        employee.setName(namePre + "-" + index);
+        employee.setSalary(new BigDecimal(1000));
+        return employee;
     }
 }
