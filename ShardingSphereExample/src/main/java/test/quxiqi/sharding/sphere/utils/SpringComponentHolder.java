@@ -1,7 +1,6 @@
 package test.quxiqi.sharding.sphere.utils;
 
 import lombok.Getter;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,7 +20,7 @@ public class SpringComponentHolder implements ApplicationContextAware {
     @Getter
     private static StringRedisTemplate stringRedisTemplate;
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         alc = applicationContext;
         load();
     }
