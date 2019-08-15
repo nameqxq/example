@@ -31,5 +31,6 @@ public class Employee implements Serializable {
     private BigDecimal salary;
 
     @Column(name = "gender")
+    @Convert(converter = EmployeeConst.Gender.Convert.class)
     private EmployeeConst.Gender gender;
 }

@@ -1,5 +1,8 @@
 package test.quxiqi.sharding.sphere.enums;
 
+
+import test.quxiqi.sharding.sphere.config.BaseEnumAttributeConvert;
+
 /**
  * @author <a href="mailto:quxiqi@zskuaixiao.com"> quxiqi </a>
  * @version 1.0 2019 八月.2019/8/15
@@ -7,8 +10,8 @@ package test.quxiqi.sharding.sphere.enums;
 public class EmployeeConst {
 
     public enum Gender implements BaseEnum<Integer>{
-        MAN(0),
-        WOMAN(1),
+        MAN(1),
+        WOMAN(0),
         ;
         public Integer val;
 
@@ -19,6 +22,9 @@ public class EmployeeConst {
         @Override
         public Integer getVal() {
             return val;
+        }
+
+        public static class Convert extends BaseEnumAttributeConvert<Gender, Integer> {
         }
     }
 }

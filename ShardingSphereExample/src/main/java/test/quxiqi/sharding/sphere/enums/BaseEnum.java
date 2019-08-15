@@ -2,7 +2,6 @@ package test.quxiqi.sharding.sphere.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import javax.persistence.AttributeConverter;
 import java.util.Objects;
 
 /**
@@ -19,10 +18,9 @@ import java.util.Objects;
  *
  * 所以这里要再抽离一层，在尽量不影响原有枚举类的前提下。 我抽了一层 BaseEnum 来做这个事情
  *
- * 新增JPA枚举转换
  * @date 2019/7/25 11:47
  **/
-public interface BaseEnum<T> extends AttributeConverter<BaseEnum<T>, T> {
+public interface BaseEnum<T> {
     /**
      * @author quxiqi
      * @date 2019/7/25 14:39
@@ -61,18 +59,6 @@ public interface BaseEnum<T> extends AttributeConverter<BaseEnum<T>, T> {
         }
         return null;
     }
-
-    @Override
-    default T convertToDatabaseColumn(BaseEnum<T> attribute) {
-        return attribute.getVal();
-    }
-    @Override
-    default BaseEnum<T> convertToEntityAttribute(T dbData) {
-        @SuppressWarnings("unchecked")
-        Class<? extends BaseEnum<T>> clz = (Class<? extends BaseEnum<T>>) getClass();
-        return BaseEnum.of(dbData, clz);
-    }
-
     /**
      * 功能描述 获取枚举值
      * 主要提供给jackson用来转换枚举对象
