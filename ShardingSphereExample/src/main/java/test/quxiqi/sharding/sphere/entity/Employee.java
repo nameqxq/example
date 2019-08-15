@@ -3,6 +3,7 @@ package test.quxiqi.sharding.sphere.entity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import test.quxiqi.sharding.sphere.enums.EmployeeConst;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,4 +30,6 @@ public class Employee implements Serializable {
     @Column(name = "salary")
     private BigDecimal salary;
 
+    @Column(name = "gender")
+    private EmployeeConst.Gender gender;
 }
