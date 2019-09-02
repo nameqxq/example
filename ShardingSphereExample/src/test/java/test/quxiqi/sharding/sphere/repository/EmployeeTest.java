@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import test.quxiqi.sharding.sphere.Runner;
 import test.quxiqi.sharding.sphere.entity.Employee;
 import test.quxiqi.sharding.sphere.entity.Example;
+import test.quxiqi.sharding.sphere.enums.EmployeeConst;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class EmployeeTest {
     public void select() {
         List<Employee> all = employeeRepository.findAll();
         System.out.println(all);
+
+        List<Employee> byGender = employeeRepository.findByGender(EmployeeConst.Gender.MAN);
+        System.out.println(byGender);
     }
 
     private List<Employee> buildNewEmployee(int num) {

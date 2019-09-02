@@ -28,8 +28,14 @@ public class ExampleTest {
         List<Example> inserts = buildNewExamples(100);
         exampleRepository.save(inserts);
         // i'm sure i only use mysql, when i exclusions other database pom dependencies and start project:
+    }
 
-
+    @Test
+    public void save() {
+        Example example = new Example();
+        example.setId(2L);
+        // example.setName("test");
+        exampleRepository.save(example);
     }
 
     @Test
