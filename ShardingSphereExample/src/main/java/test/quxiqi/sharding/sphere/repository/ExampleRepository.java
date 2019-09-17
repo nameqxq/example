@@ -13,4 +13,5 @@ import java.util.List;
 public interface ExampleRepository extends JpaRepository<Example, Long> {
 
     List<Example> findByCreateTimeBefore(Date createTime);
+    List<Example> findByIdBetween(long startId, long endId);
 }

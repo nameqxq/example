@@ -25,19 +25,23 @@ spring:
       name: ds
       ds:
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://101.236.55.211:22351/test?useUnicode=true&characterEncoding=UTF-8
+        jdbcUrl: jdbc:mysql://rds.aliyun.dev.51dinghuo.cc/test?useUnicode=true&characterEncoding=UTF-8
         username: laimi_develop
         type: com.zaxxer.hikari.HikariDataSource
-        password: TSzIFJHThBBqwwwM
+        password: KVapw0e0wfOUB145
     sharding:
+      defaultDataSourceName: ds
       tables:
         example:
           logicTable: example
           actualDataNodes: ds.example_${0..1}
           tableStrategy:
-            standard:
-              shardingColumn: id
-              preciseAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
+#            standard:
+#              shardingColumn: id
+#              preciseAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
+            complex:
+              shardingColumns: id,create_time
+              algorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleComplexAlgorithm
           keyGenerator:
             type: REDIS
             column: id

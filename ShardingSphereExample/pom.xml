@@ -18,7 +18,7 @@
     </parent>
 
     <properties>
-        <sharding-jdbc.version>4.0.0-RC1</sharding-jdbc.version>
+        <sharding-jdbc.version>4.0.0-RC2</sharding-jdbc.version>
     </properties>
 
     <dependencies>

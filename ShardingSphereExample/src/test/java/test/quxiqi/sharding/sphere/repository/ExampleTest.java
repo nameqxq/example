@@ -40,11 +40,15 @@ public class ExampleTest {
 
     @Test
     public void select() {
-        List<Example> all = exampleRepository.findAll();
-        System.out.println(all);
+        // List<Example> all = exampleRepository.findAll();
+        // System.out.println(all);
 
         List<Example> before = exampleRepository.findByCreateTimeBefore(new Date());
         System.out.println(before);
+        // List<Example> greaterThan = exampleRepository.findByIdGreaterThan(2L);
+        // System.out.println(greaterThan);
+        List<Example> between = exampleRepository.findByIdBetween(2L, 10L);
+        System.out.println(between);
     }
 
     public static List<Example> buildNewExamples(int num) {
