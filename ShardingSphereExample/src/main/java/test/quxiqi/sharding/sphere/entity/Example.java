@@ -24,6 +24,12 @@ public class Example implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "rel_id")
+    private Long relId;
+
     @Column(name = "name")
     private String name;
 

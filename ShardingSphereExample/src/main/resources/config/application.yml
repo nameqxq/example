@@ -21,6 +21,13 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   shardingsphere:
+    orchestration:
+      name: orchestration-sharding-data-source
+      registry:
+        type: zookeeper
+        serverLists: proxy.51dinghuo.cc:22335
+        namespace: sharding-jdbc
+      overwrite: false
     datasource:
       name: ds
       ds:
@@ -40,7 +47,7 @@ spring:
 #              shardingColumn: id
 #              preciseAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
             complex:
-              shardingColumns: id,create_time
+              shardingColumns: code,create_time
               algorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleComplexAlgorithm
           keyGenerator:
             type: REDIS
