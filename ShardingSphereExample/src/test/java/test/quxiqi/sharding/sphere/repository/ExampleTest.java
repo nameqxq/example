@@ -31,10 +31,16 @@ public class ExampleTest {
 
     @Test
     public void save() {
-        Example example = new Example();
-        example.setId(2L);
-        // example.setName("test");
-        exampleRepository.save(example);
+        // fixme update需要带上code参数
+        List<Example> byCode = exampleRepository.findByCode("20190317-16475");
+        for (Example example : byCode) {
+            example.setRelId(75164L);
+            exampleRepository.save(example);
+        }
+
+        Example one = exampleRepository.findOne(381113856803471361L);
+        one.setRelId(69120L);
+        exampleRepository.save(one);
     }
 
     @Test
@@ -49,11 +55,11 @@ public class ExampleTest {
         System.out.println(or);
 
         Date end = new Date();
-        List<Example> before = exampleRepository.findByCreateTimeBetween(DateUtils.addMonths(end, -2), end);
-        System.out.println(before);
-
-        List<Example> between = exampleRepository.findByCode("20190317-16475");
+        List<Example> between = exampleRepository.findByCreateTimeBetween(DateUtils.addMonths(end, -2), end);
         System.out.println(between);
+
+        List<Example> byCode = exampleRepository.findByCode("20190317-16475");
+        System.out.println(byCode);
     }
 
     public static List<Example> buildNewExamples(int num) {
