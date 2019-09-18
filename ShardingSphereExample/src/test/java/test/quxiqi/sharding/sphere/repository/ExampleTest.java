@@ -25,7 +25,7 @@ public class ExampleTest {
 
     @Test
     public void insert() {
-        List<Example> inserts = buildNewExamples(100);
+        List<Example> inserts = buildNewExamples(20);
         exampleRepository.save(inserts);
         // i'm sure i only use mysql, when i exclusions other database pom dependencies and start project:
     }
@@ -43,8 +43,8 @@ public class ExampleTest {
         // List<Example> all = exampleRepository.findAll();
         // System.out.println(all);
 
-        List<Example> before = exampleRepository.findByCreateTimeBefore(new Date());
-        System.out.println(before);
+        List<Example> byRelIds = exampleRepository.findByRelId(840242073L);
+        System.out.println(byRelIds);
         // List<Example> greaterThan = exampleRepository.findByIdGreaterThan(2L);
         // System.out.println(greaterThan);
         List<Example> between = exampleRepository.findByIdBetween(2L, 10L);
@@ -53,7 +53,7 @@ public class ExampleTest {
 
     public static List<Example> buildNewExamples(int num) {
         Random random = new Random();
-        int batch = random.nextInt() % 100000;
+        int batch = random.nextInt(1000000);
         List<Example> list = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
             list.add(buildNewExample(batch, i));
@@ -65,6 +65,8 @@ public class ExampleTest {
         Example example = new Example();
         String namePre = String.format("%07d", batch);
         example.setName(namePre + "-" + index);
+        example.setCode(namePre + "-" + index);
+        example.setRelId((long)(batch  * 1000 + index));
         example.setCreateTime(new Date());
         return example;
     }

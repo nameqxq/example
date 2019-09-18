@@ -1,36 +1,34 @@
 package test.quxiqi.sharding.sphere.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import test.quxiqi.sharding.sphere.enums.EmployeeConst;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @author <a href="mailto:quxiqi@zskuaixiao.com"> quxiqi </a>
- * @version 1.0 2019 八月.2019/8/12
+ * @version 1.0 2019 9月.2019/9/18
  */
 @Entity
-@Table(name = "employee")
+@Table(name = "example_rel")
 @DynamicUpdate
 @DynamicInsert
 @Data
-public class Employee implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ExampleRel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "rel_id")
+    private Long relId;
 
-    @Column(name = "salary")
-    private BigDecimal salary;
-
-    @Column(name = "gender")
-    @Convert(converter = EmployeeConst.Gender.Convert.class)
-    private EmployeeConst.Gender gender;
+    @Column(name = "code")
+    private String code;
 }

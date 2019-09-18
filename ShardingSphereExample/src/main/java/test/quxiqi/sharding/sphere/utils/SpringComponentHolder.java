@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import test.quxiqi.sharding.sphere.repository.ExampleRelRepository;
 
 import java.util.function.Consumer;
 
@@ -19,6 +20,8 @@ public class SpringComponentHolder implements ApplicationContextAware {
     private static ApplicationContext alc;
     @Getter
     private static StringRedisTemplate stringRedisTemplate;
+    @Getter
+    private static ExampleRelRepository exampleRelRepository;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         alc = applicationContext;
@@ -33,6 +36,7 @@ public class SpringComponentHolder implements ApplicationContextAware {
 
     private enum Component {
         STRING_REDIS_TEMPLATE(StringRedisTemplate.class, it -> SpringComponentHolder.stringRedisTemplate = (StringRedisTemplate)it),
+        EXAMPLE_REL_REPOSITORY(ExampleRelRepository.class, it -> SpringComponentHolder.exampleRelRepository = (ExampleRelRepository)it),
         ;
         private final Class<?> clz;
         private final Consumer<Object> consumer;

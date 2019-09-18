@@ -47,25 +47,21 @@ spring:
 #              shardingColumn: id
 #              preciseAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
             complex:
-              shardingColumns: code,create_time
+              shardingColumns: code,rel_id
               algorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleComplexAlgorithm
           keyGenerator:
-            type: REDIS
+            type: SNOWFLAKE
             column: id
-            props:
-              logicTableName: example
-        employee:
-          logicTable: employee
-          actualDataNodes: ds.employee_${0..1}
+        example_rel:
+          logicTable: example_rel
+          actualDataNodes: ds.example_rel_${0..1}
           tableStrategy:
             inline:
-              shardingColumn: id
-              algorithmExpression: employee_${id % 2}
+              shardingColumn: rel_id
+              algorithmExpression: example_rel_${rel_id % 2}
           keyGenerator:
-            type: REDIS
+            type: SNOWFLAKE
             column: id
-            props:
-              logicTableName: employee
       defaultKeyGenerator:
         type: SNOWFLAKE
         column: id
