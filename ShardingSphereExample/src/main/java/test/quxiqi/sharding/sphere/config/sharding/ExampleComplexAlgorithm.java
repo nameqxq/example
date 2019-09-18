@@ -22,7 +22,7 @@ public class ExampleComplexAlgorithm implements ComplexKeysShardingAlgorithm<Com
     @Override
     public Collection<String> doSharding(Collection<String> availableTargetNames,
                                          ComplexKeysShardingValue<Comparable<?>> shardingValue) {
-        Collection<String> routeTables = new HashSet<>();
+        Collection<String> routeTables = new HashSet<>(availableTargetNames.size(), 1);
         Map<String, Collection<Comparable<?>>> columnNameAndShardingValuesMap = shardingValue.getColumnNameAndShardingValuesMap();
 
         Collection<Comparable<?>> codes = columnNameAndShardingValuesMap.get(CODE);
