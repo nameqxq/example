@@ -14,5 +14,6 @@ public interface ExampleRepository extends JpaRepository<Example, Long> {
 
     List<Example> findByCreateTimeBefore(Date createTime);
     List<Example> findByRelId(Long relId);
+    List<Example> findByRelIdOrCode(Long relId, String code);
     List<Example> findByIdBetween(long startId, long endId);
 }

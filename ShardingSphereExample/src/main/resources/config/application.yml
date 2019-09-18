@@ -47,7 +47,7 @@ spring:
 #              shardingColumn: id
 #              preciseAlgorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleTableStrategy
             complex:
-              shardingColumns: code,rel_id
+              shardingColumns: code,rel_id,create_time
               algorithmClassName: test.quxiqi.sharding.sphere.config.sharding.ExampleComplexAlgorithm
           keyGenerator:
             type: SNOWFLAKE

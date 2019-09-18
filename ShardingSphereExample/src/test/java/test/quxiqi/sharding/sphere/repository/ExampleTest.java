@@ -1,5 +1,7 @@
 package test.quxiqi.sharding.sphere.repository;
 
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +47,15 @@ public class ExampleTest {
 
         List<Example> byRelIds = exampleRepository.findByRelId(840242073L);
         System.out.println(byRelIds);
-        // List<Example> greaterThan = exampleRepository.findByIdGreaterThan(2L);
-        // System.out.println(greaterThan);
+        List<Example> or = exampleRepository.findByRelIdOrCode(840242073L, "0840242-71");
+        System.out.println(or);
         List<Example> between = exampleRepository.findByIdBetween(2L, 10L);
         System.out.println(between);
     }
 
     public static List<Example> buildNewExamples(int num) {
         Random random = new Random();
-        int batch = random.nextInt(1000000);
+        int batch = random.nextInt(365);
         List<Example> list = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
             list.add(buildNewExample(batch, i));
@@ -63,11 +65,12 @@ public class ExampleTest {
 
     private static Example buildNewExample(int batch, int index) {
         Example example = new Example();
-        String namePre = String.format("%07d", batch);
+        Date date = DateUtils.addDays(new Date(), batch);
+        String namePre = FastDateFormat.getInstance("YYYYMMDD").format(date);
         example.setName(namePre + "-" + index);
         example.setCode(namePre + "-" + index);
         example.setRelId((long)(batch  * 1000 + index));
-        example.setCreateTime(new Date());
+        example.setCreateTime(date);
         return example;
     }
 }
