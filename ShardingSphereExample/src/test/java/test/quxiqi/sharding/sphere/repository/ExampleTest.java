@@ -10,10 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import test.quxiqi.sharding.sphere.Runner;
 import test.quxiqi.sharding.sphere.entity.Example;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author <a href="mailto:quxiqi@zskuaixiao.com"> quxiqi </a>
@@ -27,7 +24,7 @@ public class ExampleTest {
 
     @Test
     public void insert() {
-        List<Example> inserts = buildNewExamples(20);
+        List<Example> inserts = buildNewExamples(1000);
         exampleRepository.save(inserts);
         // i'm sure i only use mysql, when i exclusions other database pom dependencies and start project:
     }
@@ -45,30 +42,37 @@ public class ExampleTest {
         // List<Example> all = exampleRepository.findAll();
         // System.out.println(all);
 
-        List<Example> byRelIds = exampleRepository.findByRelId(840242073L);
+        List<Example> byRelIds = exampleRepository.findByRelId(88162L);
         System.out.println(byRelIds);
-        List<Example> or = exampleRepository.findByRelIdOrCode(840242073L, "0840242-71");
+
+        List<Example> or = exampleRepository.findByRelIdOrCode(88162L, "20190317-16475");
         System.out.println(or);
-        List<Example> between = exampleRepository.findByIdBetween(2L, 10L);
+
+        Date end = new Date();
+        List<Example> before = exampleRepository.findByCreateTimeBetween(DateUtils.addMonths(end, -2), end);
+        System.out.println(before);
+
+        List<Example> between = exampleRepository.findByCode("20190317-16475");
         System.out.println(between);
     }
 
     public static List<Example> buildNewExamples(int num) {
-        Random random = new Random();
-        int batch = random.nextInt(365);
         List<Example> list = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
-            list.add(buildNewExample(batch, i));
+            list.add(buildNewExample(i));
         }
         return list;
     }
 
-    private static Example buildNewExample(int batch, int index) {
+    private static Example buildNewExample(int index) {
+        Random random = new Random();
+        int batch = random.nextInt(365);
+        Date date = DateUtils.addDays(DateUtils.truncate(new Date(), Calendar.YEAR), batch);
+        String namePre = FastDateFormat.getInstance("yyyyMMdd").format(date);
+
         Example example = new Example();
-        Date date = DateUtils.addDays(new Date(), batch);
-        String namePre = FastDateFormat.getInstance("YYYYMMDD").format(date);
-        example.setName(namePre + "-" + index);
-        example.setCode(namePre + "-" + index);
+        example.setName(namePre + "-" + index + batch);
+        example.setCode(namePre + "-" + index + batch);
         example.setRelId((long)(batch  * 1000 + index));
         example.setCreateTime(date);
         return example;

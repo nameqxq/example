@@ -41,7 +41,7 @@ spring:
       tables:
         example:
           logicTable: example
-          actualDataNodes: ds.example_${0..1}
+          actualDataNodes: ds.example_2019_1_3,ds.example_2019_4_6,ds.example_2019_7_9,ds.example_2019_10_12
           tableStrategy:
 #            standard:
 #              shardingColumn: id

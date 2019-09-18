@@ -33,7 +33,7 @@ public class Example implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "create_time", updatable = false)
+    @Column(name = "create_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 }

@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface ExampleRepository extends JpaRepository<Example, Long> {
 
-    List<Example> findByCreateTimeBefore(Date createTime);
+    List<Example> findByCreateTimeBetween(Date start, Date end);
     List<Example> findByRelId(Long relId);
     List<Example> findByRelIdOrCode(Long relId, String code);
-    List<Example> findByIdBetween(long startId, long endId);
+    List<Example> findByCode(String code);
 }
