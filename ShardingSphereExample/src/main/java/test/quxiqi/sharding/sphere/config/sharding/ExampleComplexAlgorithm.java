@@ -7,6 +7,7 @@ import test.quxiqi.sharding.sphere.entity.ExampleRel;
 import test.quxiqi.sharding.sphere.utils.SpringComponentHolder;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -27,15 +28,16 @@ public class ExampleComplexAlgorithm implements ComplexKeysShardingAlgorithm<Com
         Collection<Comparable<?>> codes = columnNameAndShardingValuesMap.get(CODE);
         Collection<Comparable<?>> relIds = columnNameAndShardingValuesMap.get(REL_ID);
         if (CollectionUtils.isNotEmpty(codes)) {
-            Set<String> codeSet = codes.stream().map(code -> (String) code).collect(Collectors.toSet());
+            Set<String> codeSet = convert(relIds, comparable -> (String) comparable);
             for (String code : codeSet) {
                 Integer integer = Integer.valueOf(code.split("-")[1]);
                 routeTables.add(shardingValue.getLogicTableName() + "_" + integer % 2);
             }
             return routeTables;
         } else if (CollectionUtils.isNotEmpty(relIds)) {
-            Set<Long> ids = relIds.stream().map(relId -> (Long)relId).collect(Collectors.toSet());
-            for (ExampleRel rel : SpringComponentHolder.getExampleRelRepository().findByRelIdIn(ids)) {
+            Set<Long> relIdSet = convert(relIds, comparable -> (Long)comparable);
+            List<ExampleRel> rels = SpringComponentHolder.getExampleRelRepository().findByRelIdIn(relIdSet);
+            for (ExampleRel rel : rels) {
                 Integer integer = Integer.valueOf(rel.getCode().split("-")[1]);
                 routeTables.add(shardingValue.getLogicTableName() + "_" + integer % 2);
             }
@@ -43,5 +45,9 @@ public class ExampleComplexAlgorithm implements ComplexKeysShardingAlgorithm<Com
             routeTables = availableTargetNames;
         }
         return routeTables;
+    }
+
+    private <R> Set<R> convert(Collection<Comparable<?>> relIds, Function<Comparable<?>, R> func) {
+        return relIds.stream().map(func).collect(Collectors.toSet());
     }
 }
