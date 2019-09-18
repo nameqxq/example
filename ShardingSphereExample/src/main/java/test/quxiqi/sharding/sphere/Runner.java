@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import test.quxiqi.sharding.sphere.repository.BaseRepositoryFactoryBean;
 
 /**
  * @author <a href="mailto:quxiqi@zskuaixiao.com"> quxiqi </a>
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 // @EnableConfigurationProperties(SpringBootShardingOrchestrationConfigurationProperties.class)
 @ComponentScan("test.quxiqi.sharding")
-@EnableJpaRepositories
+@EnableJpaRepositories(repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class)
 @EnableTransactionManagement
 @SpringBootApplication
 public class Runner {

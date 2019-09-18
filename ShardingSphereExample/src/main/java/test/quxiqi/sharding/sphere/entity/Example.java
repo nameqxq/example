@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
+import test.quxiqi.sharding.sphere.config.sharding.ShardingEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,7 +19,19 @@ import java.util.Date;
 @DynamicUpdate
 @DynamicInsert
 @Data
-public class Example implements Serializable {
+public class Example implements Serializable, ShardingEntity<String> {
+
+    public static final String PRIMARY_SHARDING_KEY = "code";
+    @Override
+    public String primaryShardingKey() {
+        return code;
+    }
+
+    @Override
+    public String tableName() {
+        return "example";
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -36,4 +49,5 @@ public class Example implements Serializable {
     @Column(name = "create_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+
 }

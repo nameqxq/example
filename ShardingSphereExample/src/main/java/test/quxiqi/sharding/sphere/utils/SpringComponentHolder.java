@@ -5,8 +5,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import test.quxiqi.sharding.sphere.entity.Example;
 import test.quxiqi.sharding.sphere.repository.ExampleRelRepository;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -22,6 +26,8 @@ public class SpringComponentHolder implements ApplicationContextAware {
     private static StringRedisTemplate stringRedisTemplate;
     @Getter
     private static ExampleRelRepository exampleRelRepository;
+    @Getter
+    private static EntityManager entityManager;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         alc = applicationContext;
@@ -37,6 +43,7 @@ public class SpringComponentHolder implements ApplicationContextAware {
     private enum Component {
         STRING_REDIS_TEMPLATE(StringRedisTemplate.class, it -> SpringComponentHolder.stringRedisTemplate = (StringRedisTemplate)it),
         EXAMPLE_REL_REPOSITORY(ExampleRelRepository.class, it -> SpringComponentHolder.exampleRelRepository = (ExampleRelRepository)it),
+        ENTITY_MANAGER(EntityManager.class, it -> SpringComponentHolder.entityManager = (EntityManager)it),
         ;
         private final Class<?> clz;
         private final Consumer<Object> consumer;

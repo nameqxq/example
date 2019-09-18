@@ -67,3 +67,6 @@ spring:
         column: id
     props:
       sql.show: true
+
+logging:
+  config: classpath:logback-spring.xml

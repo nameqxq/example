@@ -20,7 +20,6 @@ import java.util.stream.Stream;
  * @version 1.0 2019 9月.2019/9/16
  */
 public class ExampleComplexAlgorithm implements ComplexKeysShardingAlgorithm<Comparable<?>> {
-
     private static final String CODE = "code";
     private static final String REL_ID = "rel_id";
     private static final String CREATE_TIME = "create_time";
