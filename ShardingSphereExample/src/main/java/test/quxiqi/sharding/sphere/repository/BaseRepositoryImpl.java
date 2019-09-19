@@ -75,6 +75,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     }
 
     private <S extends T> TableInfo getAndCacheTableInfo(S entity) {
+        // TODO quxiqi 2019/9/19 17:57 cache
         SessionFactoryImpl session = em.getEntityManagerFactory().unwrap(SessionFactoryImpl.class);
         EntityPersister entityPersister = session.getEntityPersister(entity.getClass().getName());
         if (!(entityPersister instanceof SingleTableEntityPersister)) {
@@ -127,6 +128,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
                         .append(" set ");
         //拼装set语句
         for (TableInfo.ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
+            // TODO quxiqi 2019/9/19 17:59 过滤掉没修改过的
             updateSql.append(columnInfo.getName()).append("=:").append(columnInfo.getValueName()).append(",");
         }
         // 拼装where语句
