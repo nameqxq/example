@@ -20,6 +20,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+        session_factory:
+          statement_inspector: test.quxiqi.sharding.sphere.config.JpaInterceptor
   shardingsphere:
     orchestration:
       name: orchestration-sharding-data-source

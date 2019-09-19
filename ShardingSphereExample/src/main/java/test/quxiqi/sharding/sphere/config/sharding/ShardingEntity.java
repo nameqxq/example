@@ -6,6 +6,5 @@ package test.quxiqi.sharding.sphere.config.sharding;
  * @version 1.0 2019 9月.2019/9/18
  */
 public interface ShardingEntity<T> {
-    T primaryShardingKey();
-    String tableName();
+    String primaryShardingKey();
 }

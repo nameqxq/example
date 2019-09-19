@@ -21,15 +21,9 @@ import java.util.Date;
 @Data
 public class Example implements Serializable, ShardingEntity<String> {
 
-    public static final String PRIMARY_SHARDING_KEY = "code";
     @Override
     public String primaryShardingKey() {
-        return code;
-    }
-
-    @Override
-    public String tableName() {
-        return "example";
+        return "code";
     }
 
     @Id
