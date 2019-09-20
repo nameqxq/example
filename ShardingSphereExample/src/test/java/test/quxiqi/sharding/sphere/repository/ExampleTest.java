@@ -32,15 +32,19 @@ public class ExampleTest {
     @Test
     public void save() {
         // fixme update需要带上code参数
-        List<Example> byCode = exampleRepository.findByCode("20190317-16475");
-        for (Example example : byCode) {
-            example.setRelId(75164L);
-            exampleRepository.save(example);
-        }
+        // List<Example> byCode = exampleRepository.findByCode("20190317-16475");
+        // for (Example example : byCode) {
+        //     example.setRelId(75164L);
+        //     exampleRepository.save(example);
+        // }
 
         Example one = exampleRepository.findOne(381113856803471361L);
-        one.setRelId(69120L);
+        one.setRelId(75164L);
         exampleRepository.save(one);
+
+        one.setRelId(75123L);
+        exampleRepository.save(one);
+
     }
 
     @Test

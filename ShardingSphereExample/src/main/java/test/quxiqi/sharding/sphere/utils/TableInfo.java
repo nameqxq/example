@@ -1,6 +1,7 @@
 package test.quxiqi.sharding.sphere.utils;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.lang.reflect.Field;
@@ -19,9 +20,10 @@ public class TableInfo {
     private List<ColumnInfo> columnInfos;
 
     @Data
-    @AllArgsConstructor
+    @Builder
     public static class ColumnInfo {
         private String name;
+        private String propName;
         private String valueName;
         private Field field;
     }

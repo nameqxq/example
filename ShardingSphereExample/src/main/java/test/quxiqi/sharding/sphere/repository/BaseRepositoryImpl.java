@@ -60,7 +60,10 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
             return em.merge(entity);
         }
 
-        String updateSql = buildUpdateSql(tableInfo);
+        String updateSql = buildUpdateSql(entity, tableInfo);
+        if (updateSql == null) {
+            return em.merge(entity);
+        }
 
         Map<String, Object> valueMap = buildValueMap(entity, tableInfo);
         if (valueMap == null) {
@@ -69,6 +72,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 
         Query query = buildQuery(entity, updateSql, valueMap);
         query.executeUpdate();
+        ((ShardingEntity)entity).clear();
 
         ID id = (ID) valueMap.get(tableInfo.getPrimaryKey().getName());
         return (S) findOne(id);
@@ -88,48 +92,84 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
         List<TableInfo.ColumnInfo> columnInfos = new LinkedList<>();
         ShardingEntity shardingEntity = (ShardingEntity) entity;
         for (AttributeDefinition attribute : persister.getAttributes()) {
-            String name = attribute.getName();
+            String propName = attribute.getName();
             Field field;
             try {
-                field = entity.getClass().getDeclaredField(name);
+                field = entity.getClass().getDeclaredField(propName);
             } catch (NoSuchFieldException e) {
                 log.error("分片表表结构解析错误 --> table: {}", persister.getTableName(), e);
                 return null;
             }
 
             field.setAccessible(true);
-            String columnName = persister.getPropertyColumnNames(name)[0];
+            String columnName = persister.getPropertyColumnNames(propName)[0];
 
-            if (name.equals(shardingEntity.primaryShardingKey())) {
-                tableInfo.setPrimaryShardingKey(new TableInfo.ColumnInfo(columnName, columnName + "_shardingPrimaryKey", field));
+            if (propName.equals(shardingEntity.primaryShardingKey())) {
+                tableInfo.setPrimaryShardingKey(
+                        TableInfo.ColumnInfo.builder()
+                                .name(columnName)
+                                .valueName(columnName + "_shardingPrimaryKey")
+                                .field(field)
+                                .propName(propName)
+                                .build()
+                );
             }
-            columnInfos.add(new TableInfo.ColumnInfo(columnName, columnName, field));
+            columnInfos.add(
+                    TableInfo.ColumnInfo.builder()
+                            .name(columnName)
+                            .valueName(columnName)
+                            .field(field)
+                            .propName(propName)
+                            .build()
+            );
         }
 
         Field field;
+        String idPropName = persister.getIdentifierPropertyName();
+        String idColumnName = persister.getIdentifierColumnNames()[0];
         try {
-            field = entity.getClass().getDeclaredField(persister.getIdentifierPropertyName());
+            field = entity.getClass().getDeclaredField(idPropName);
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
             log.error("分片表表结构解析错误 --> table: {}", persister.getTableName(), e);
             return null;
         }
         tableInfo.setPrimaryKey(
-                new TableInfo.ColumnInfo(persister.getIdentifierPropertyName(), persister.getIdentifierPropertyName() + "_primaryKey", field));
-        columnInfos.add(new TableInfo.ColumnInfo(persister.getIdentifierPropertyName(), persister.getIdentifierPropertyName(), field));
+                TableInfo.ColumnInfo.builder()
+                        .name(idColumnName)
+                        .valueName(idPropName + "_primaryKey")
+                        .field(field)
+                        .propName(idPropName)
+                        .build()
+        );
+        columnInfos.add(
+                TableInfo.ColumnInfo.builder()
+                        .name(idColumnName)
+                        .valueName(idPropName)
+                        .field(field)
+                        .propName(idPropName)
+                        .build()
+        );
         tableInfo.setColumnInfos(columnInfos);
         return tableInfo;
     }
 
-    private String buildUpdateSql(TableInfo tableInfo) {
+    private <S extends T> String buildUpdateSql(S entity, TableInfo tableInfo) {
         StringBuilder updateSql=
                 new StringBuilder("update ")
                         .append(tableInfo.getName())
                         .append(" set ");
         //拼装set语句
+        boolean noUpdate = true;
+        ShardingEntity shardingEntity = (ShardingEntity) entity;
         for (TableInfo.ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
-            // TODO quxiqi 2019/9/19 17:59 过滤掉没修改过的
-            updateSql.append(columnInfo.getName()).append("=:").append(columnInfo.getValueName()).append(",");
+            if (shardingEntity.hasUpdate(columnInfo.getName())) {
+                updateSql.append(columnInfo.getName()).append("=:").append(columnInfo.getValueName()).append(",");
+                noUpdate = false;
+            }
+        }
+        if (noUpdate) {
+            return null;
         }
         // 拼装where语句
         updateSql
@@ -150,8 +190,11 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
         Map<String, Object> valueMap;
         try {
             valueMap = new HashMap<>(tableInfo.getColumnInfos().size() + 2, 1);
+            ShardingEntity shardingEntity = (ShardingEntity) entity;
             for (TableInfo.ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
-                valueMap.put(columnInfo.getValueName(), columnInfo.getField().get(entity));
+                if (shardingEntity.hasUpdate(columnInfo.getName())) {
+                    valueMap.put(columnInfo.getValueName(), columnInfo.getField().get(entity));
+                }
             }
             valueMap.put(tableInfo.getPrimaryKey().getValueName(), tableInfo.getPrimaryKey().getField().get(entity));
             valueMap.put(tableInfo.getPrimaryShardingKey().getValueName(), tableInfo.getPrimaryShardingKey().getField().get(entity));
