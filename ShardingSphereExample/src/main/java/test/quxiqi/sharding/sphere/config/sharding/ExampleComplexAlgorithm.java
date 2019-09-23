@@ -1,7 +1,9 @@
 package test.quxiqi.sharding.sphere.config.sharding;
 
 import com.google.common.collect.Range;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
 import test.quxiqi.sharding.sphere.entity.ExampleRel;
@@ -12,6 +14,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,11 +23,17 @@ import java.util.stream.Stream;
  * @author <a href="mailto:quxiqi@zskuaixiao.com"> quxiqi </a>
  * @version 1.0 2019 9月.2019/9/16
  */
+@Slf4j
 public class ExampleComplexAlgorithm implements ComplexKeysShardingAlgorithm<Comparable<?>> {
     private static final String CODE = "code";
     private static final String REL_ID = "rel_id";
     private static final String CREATE_TIME = "create_time";
     private static final String DEFAULT_DATE_PATTERN = "yyyyMMdd HH:mm:ss";
+    /**
+     * 日期正则
+     */
+    private static final Pattern DATE_PATTERN = Pattern.compile("20\\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])");
+
 
     private static final LocalDateTime SHARDING_START_DATE = LocalDateTime.now().withYear(2019).withMonth(1);
     private static final LocalDateTime SHARDING_END_DATE = SHARDING_START_DATE.plusMonths(12);
@@ -79,20 +89,40 @@ public class ExampleComplexAlgorithm implements ComplexKeysShardingAlgorithm<Com
     }
 
     private Collection<String> routeByCodes(String logicTableName, Stream<String> codes) {
-        return codes
+        final MutableBoolean cannotRoute = new MutableBoolean(false);
+        Set<String> tables = codes
                 .map(code -> {
-                    String dateStr = code.split("-")[0] + " 00:00:00";
-                    LocalDateTime date = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN));
+                    LocalDateTime date = analysisDate(code);
+                    if (date == null) {
+                        log.warn("code时间域解析失败, 本次路由失败 --> code: {}", code);
+                        cannotRoute.setTrue();
+                        return null;
+                    }
                     return buildRouteTable(logicTableName, date);
                 })
                 .collect(Collectors.toSet());
+        return cannotRoute.getValue() ? null : tables;
+    }
+
+    private LocalDateTime analysisDate(String code) {
+        Matcher matcher = DATE_PATTERN.matcher(code);
+        while (matcher.find()) {
+            String dateStr = matcher.group();
+            String dateTimeStr = dateStr + " 00:00:00";
+            try {
+                return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN));
+            } catch (Exception e) {
+                log.warn("code时间域解析失败 --> code: {}, dateStr: {}", code, dateStr);
+            }
+        }
+        return null;
     }
 
     private String buildRouteTable(String logicTableName, LocalDateTime start) {
         int year = start.getYear();
         int month = start.getMonth().getValue();
         MonthRange monthRange = MonthRange.include(month);
-        return logicTableName + "_" +year + "_" + monthRange.start + "_" + monthRange.end;
+        return logicTableName + "_" +year + "_" + String.format("%02d", monthRange.start) + "_" + String.format("%02d", monthRange.end);
     }
 
     private Collection<String> routeByCreateTimeRange(String logicTableName, LocalDateTime start, LocalDateTime end) {

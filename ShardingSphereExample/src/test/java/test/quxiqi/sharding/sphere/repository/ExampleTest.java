@@ -52,17 +52,17 @@ public class ExampleTest {
         // List<Example> all = exampleRepository.findAll();
         // System.out.println(all);
 
-        List<Example> byRelIds = exampleRepository.findByRelId(88162L);
-        System.out.println(byRelIds);
+        // List<Example> byRelIds = exampleRepository.findByRelId(88162L);
+        // System.out.println(byRelIds);
+        //
+        // List<Example> or = exampleRepository.findByRelIdOrCode(88162L, "20190317-16475");
+        // System.out.println(or);
+        //
+        // Date end = new Date();
+        // List<Example> between = exampleRepository.findByCreateTimeBetween(DateUtils.addMonths(end, -2), end);
+        // System.out.println(between);
 
-        List<Example> or = exampleRepository.findByRelIdOrCode(88162L, "20190317-16475");
-        System.out.println(or);
-
-        Date end = new Date();
-        List<Example> between = exampleRepository.findByCreateTimeBetween(DateUtils.addMonths(end, -2), end);
-        System.out.println(between);
-
-        List<Example> byCode = exampleRepository.findByCode("20190317-16475");
+        List<Example> byCode = exampleRepository.findByCode("20190317-20190312");
         System.out.println(byCode);
     }
 

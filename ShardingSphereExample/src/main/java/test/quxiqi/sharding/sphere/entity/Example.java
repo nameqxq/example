@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 @DynamicUpdate
 @DynamicInsert
 @Getter
-public class Example implements Serializable, ShardingEntity<String> {
+public class Example implements Serializable, ShardingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

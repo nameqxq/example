@@ -54,7 +54,6 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 
     @SuppressWarnings("unchecked")
     private <S extends T> S shardingSave(S entity) {
-
         TableInfo tableInfo = getAndCacheTableInfo(entity);
         if (tableInfo == null) {
             return em.merge(entity);
