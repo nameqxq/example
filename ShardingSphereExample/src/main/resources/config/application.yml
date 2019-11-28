@@ -23,18 +23,11 @@ spring:
         session_factory:
           statement_inspector: test.quxiqi.sharding.sphere.config.JpaInterceptor
   shardingsphere:
-    orchestration:
-      name: orchestration-sharding-data-source
-      registry:
-        type: zookeeper
-        serverLists: proxy.51dinghuo.cc:22335
-        namespace: sharding-jdbc
-      overwrite: false
     datasource:
       name: ds
       ds:
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://rds.aliyun.dev.51dinghuo.cc/test?useUnicode=true&characterEncoding=UTF-8
+        jdbcUrl: jdbc:mysql://proxy.51dinghuo.cc:22351/test?useUnicode=true&characterEncoding=UTF-8
         username: laimi_develop
         type: com.zaxxer.hikari.HikariDataSource
         password: KVapw0e0wfOUB145
@@ -43,7 +36,7 @@ spring:
       tables:
         example:
           logicTable: example
-          actualDataNodes: ds.example_2019_1_3,ds.example_2019_4_6,ds.example_2019_7_9,ds.example_2019_10_12
+          actualDataNodes: ds.example_2019_01_03,ds.example_2019_04_06,ds.example_2019_07_09,ds.example_2019_10_12
           tableStrategy:
 #            standard:
 #              shardingColumn: id

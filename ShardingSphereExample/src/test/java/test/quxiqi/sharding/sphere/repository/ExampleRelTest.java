@@ -32,6 +32,7 @@ public class ExampleRelTest {
                         .map(example -> new ExampleRel(null, example.getRelId(), example.getCode()))
                         .collect(Collectors.toList());
         exampleRelRepository.save(rels);
+
     }
 
 

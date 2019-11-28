@@ -2,6 +2,8 @@ package test.quxiqi.sharding.sphere.repository;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
+import org.apache.shardingsphere.core.rule.TableRule;
+import org.apache.shardingsphere.shardingjdbc.jdbc.core.datasource.ShardingDataSource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,8 @@ import java.util.*;
 public class ExampleTest {
     @Autowired
     private ExampleRepository exampleRepository;
-
+    @Autowired
+    private ShardingDataSource shardingDataSource;
     @Test
     public void insert() {
         List<Example> inserts = buildNewExamples(1000);
@@ -49,6 +52,11 @@ public class ExampleTest {
 
     @Test
     public void select() {
+        System.out.println(shardingDataSource);
+        TableRule example = shardingDataSource.getRuntimeContext().getRule().getTableRule("example");
+        example.addDataNodes(Collections.singletonList("ds.example_2020_01_03"));
+        shardingDataSource.getRuntimeContext().getMetaData().getTable().copyAndPut("example_2019_01_03", "example_2020_01_03");
+        // example.getActualTables().add(new DataNode("ds", "example_2020_01_03"));
         // List<Example> all = exampleRepository.findAll();
         // System.out.println(all);
 
@@ -62,7 +70,10 @@ public class ExampleTest {
         // List<Example> between = exampleRepository.findByCreateTimeBetween(DateUtils.addMonths(end, -2), end);
         // System.out.println(between);
 
-        List<Example> byCode = exampleRepository.findByCode("20190317-20190312");
+        List<Example> byCode = exampleRepository.findByCode("20200317-20200312");
+        // List<Example> byCode = exampleRepository.findByCodeIn(Arrays.asList("20190317-20190312", "20190417-20190412"));
+        // List<Example> byCode = exampleRepository.findByCodeIn(new ArrayList<>());
+        // List<Example> byCode = exampleRepository.findByCodeInAndRelId(new ArrayList<>(), 88162L);
         System.out.println(byCode);
     }
 

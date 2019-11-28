@@ -15,4 +15,6 @@ public interface ExampleRepository extends BaseRepository<Example, Long> {
     List<Example> findByRelId(Long relId);
     List<Example> findByRelIdOrCode(Long relId, String code);
     List<Example> findByCode(String code);
+    List<Example> findByCodeIn(List<String> codes);
+    List<Example> findByCodeInAndRelId(List<String> codes, Long relId);
 }
